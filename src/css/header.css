@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  gap: 30px;
+}
+
+.nav-link {
+  font-weight: 400;
+  transition: color 250ms ease-in-out;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: #747bff;
+}

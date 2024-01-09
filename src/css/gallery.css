@@ -1,0 +1,149 @@
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1128px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    gap: 24px;
+}
+
+.gallery-item {
+    width: calc((100% - 48px) / 3);
+}
+
+.gallery img {
+    width: 360px;
+    height: 200px;
+    transition: scale, ease-in-out, 300ms;
+}
+
+.gallery img:hover {
+    scale: 1.06;
+}
+
+/* Modale library*/
+
+div.sl-wrapper {
+    background-color: rgba(46, 47, 66, 0.80);
+}
+
+div.sl-wrapper .sl-counter {
+    color: #FFF;
+    font-size: 16px;
+}
+
+div.sl-wrapper .sl-close {
+    width: 32px;
+    height: 32px;
+    font-family: Montserrat, sans-serif;
+    font-size: 32px;
+    color: #FFF;
+    line-height: 1;
+}
+
+div.sl-wrapper .sl-navigation button {
+    color: #FFF;
+}
+
+/* Search form */
+
+.search-photos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 36px;
+}
+
+.search-photos input {
+    min-height: 40px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: #808080;
+    font-size: 16px;
+    outline: transparent;
+    border: 1px solid #808080;
+    transition: border-color 250ms ease-in-out;
+}
+
+.search-photos input:hover {
+    border-color: #000;
+}
+
+.search-photos input:focus {
+    border-color: #4E75FF;
+}
+
+.search-photos button {
+    min-height: 40px;
+    padding: 8px 16px;
+    background-color: #4E75FF;
+    border-radius: 4px;
+    border: none;
+    color: #FFF;
+    transition: background-color 250ms ease-in-out;
+}
+
+.search-photos button:hover {
+    background-color: #6C8CFF;
+}
+
+/* Loader */
+
+.loader-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.loader {
+    display: inline-block;
+    font-size: 32px;
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    color: #000;
+    position: relative;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
+.loader::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    bottom: 10px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 5px solid #000;
+    border-bottom-color: #4E75FF;
+    box-sizing: border-box;
+    animation: rotation 0.6s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
