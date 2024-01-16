@@ -54,6 +54,7 @@ const getPhotos = async (userQuery) => {
         const allImages = images.hits;
         if (images.totalHits === 0) {
             loader.classList.add('visually-hidden');
+            moreBtn.classList.add('visually-hidden');
             return informUser('Sorry, there are no images matching your search query. Please, try again!');
         }
         else {
