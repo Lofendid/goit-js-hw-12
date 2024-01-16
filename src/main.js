@@ -4,9 +4,10 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-const iconLeft = new URL('../img/icons/arrow-icons.svg#icon-left', import.meta.url).href; 
-const iconRight = new URL('../img/icons/arrow-icons.svg#icon-right', import.meta.url).href; 
+const iconLeft = new URL('/img/icons/arrow-icons.svg#icon-left', import.meta.url).href; 
+const iconRight = new URL('/img/icons/arrow-icons.svg#icon-right', import.meta.url).href; 
 const iconError = new URL('/img/icons/error-icon.svg', import.meta.url).href;
+const iconWarn = new URL('/img/icons/warning-icon.svg', import.meta.url).href;
 
 const LS_QUERY = 'user-query'
 
@@ -16,17 +17,17 @@ const loader = document.querySelector('.loader-wrapper');
 const moreBtn = document.querySelector('.more-btn');
 
 let page = 1;
-let limit = 9;
+let limit = 40;
 
-const mistake = (message) => {
+const informUser = (message, title = 'ERROR', icon = iconError, color = 'rgba(239, 64, 64, 1)') => {
     iziToast.show({
-        title: 'ERROR',
-        backgroundColor: 'rgba(239, 64, 64, 1)',
+        title: title,
+        backgroundColor: color,
         theme: 'dark',
         message: message,
         position: 'topRight',
         timeout: 5000,
-        iconUrl: iconError,
+        iconUrl: icon,
     });
 };
 
@@ -53,7 +54,7 @@ const getPhotos = async (userQuery) => {
         const allImages = images.hits;
         if (images.totalHits === 0) {
             loader.classList.add('visually-hidden');
-            return mistake('Sorry, there are no images matching your search query. Please, try again!');
+            return informUser('Sorry, there are no images matching your search query. Please, try again!');
         }
         else {
             const galleryMarkup = allImages.map(({ webformatURL: preview, largeImageURL: original, tags: description }) => {
@@ -91,12 +92,12 @@ const onClick = async () => {
         const totalPages = getTotalPages(images);
         if (page === totalPages) {
             moreBtn.classList.add('visually-hidden');
-            mistake('The end of collection has been reached')
+            informUser('The end of collection has been reached', 'INFO', iconWarn, 'rgba(167, 166, 145, 1)');
         };
         renderImages(images);
     }
     catch (error) {
-        mistake(error.message);
+        informUser(error.message);
     }
  };
 
@@ -112,6 +113,7 @@ const handleSubmit = async (e) => {
     renderImages(images);
     if (page === totalPages) {
         moreBtn.classList.add('visually-hidden');
+        informUser('The end of collection has been reached', 'INFO', iconWarn, 'rgba(167, 166, 145, 1)');
     }
     else if (page < totalPages) {
         moreBtn.classList.remove('visually-hidden');
