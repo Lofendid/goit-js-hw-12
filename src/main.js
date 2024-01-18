@@ -8,9 +8,9 @@ const iconLeft = new URL('/img/icons/arrow-icons.svg#icon-left', import.meta.url
 const iconRight = new URL('/img/icons/arrow-icons.svg#icon-right', import.meta.url).href; 
 const iconError = new URL('/img/icons/error-icon.svg', import.meta.url).href;
 const iconWarn = new URL('/img/icons/warning-icon.svg', import.meta.url).href;
-// це єдиний варіант що я знайшов, щоб ці іконки працювали в мене на GitHub лайв сторінці,
+// це єдиний варіант що я знайшов, щоб ці іконки працювали в мене на GitHub лайв сторінці з Vite build,
 // воно просто зберігає їх шляхи у URL та імпортує напряму в html при деплої проекту (як я розумію це)
-// ЦЕ НІЧОГО НЕ ЛАМАЄ ТА НЕ ВИКЛИКАЄ ПОМИЛОК, тому я маю бажання їх тут лишити, щоб не змінювати дизайн повторно
+// це нічого не ламає та не викликає помилок, тому я маю бажання їх тут лишити, щоб не змінювати дизайн повторно
 
 const LS_QUERY = 'user-query';
 
@@ -18,6 +18,23 @@ const gallery = document.querySelector('.gallery');
 const galleryForm = document.querySelector('.search-photos');
 const loader = document.querySelector('.loader-wrapper');
 const moreBtn = document.querySelector('.more-btn');
+const lightbox = new SimpleLightbox('.gallery a', {
+    navText: [
+        `<svg width="24" height="24"><use href="${iconLeft}"></svg>`,
+        `<svg width="24" height="24"><use href="${iconRight}"></svg>`
+    ],
+    captionsData: "alt",
+    captionDelay: false,
+});
+
+const smoothScroll = () => {
+    const singlePhoto = document.querySelector('.gallery-item');
+    const scrollHeight = singlePhoto.getBoundingClientRect().height * 2;
+    window.scrollBy({
+        top: scrollHeight,
+        behavior: 'smooth'
+    });
+ };
 
 let page = 1;
 let limit = 40;
@@ -61,7 +78,6 @@ const getPhotos = async (userQuery) => {
 const renderImages = (images) => {
     const allImages = images.hits;
     if (images.totalHits === 0) {
-        loader.classList.add('visually-hidden');
         moreBtn.classList.add('visually-hidden');
         return informUser('Sorry, there are no images matching your search query. Please, try again!');
     }
@@ -81,16 +97,7 @@ const renderImages = (images) => {
                     `
         }).join('');
         gallery.insertAdjacentHTML('beforeend', galleryMarkup);
-        const lightbox = new SimpleLightbox('.gallery a', {
-            navText: [
-                `<svg width="24" height="24"><use href="${iconLeft}"></svg>`,
-                `<svg width="24" height="24"><use href="${iconRight}"></svg>`
-            ],
-            captionsData: "alt",
-             captionDelay: false,
-        });
         lightbox.refresh();
-        loader.classList.add('visually-hidden');
     };
 };
     
@@ -113,10 +120,15 @@ const fetchAndRender = async (userQuery) => {
 
 const onClick = async () => {
     page += 1;
-    fetchAndRender(sessionStorage.getItem(LS_QUERY));
+    loader.classList.remove('visually-hidden');
+    moreBtn.classList.add('visually-hidden');
+    smoothScroll();
+    await fetchAndRender(sessionStorage.getItem(LS_QUERY));
+    smoothScroll();
     if (moreBtn.classList.contains('visually-hidden')) {
         moreBtn.removeEventListener('click', onClick);
     };
+    loader.classList.add('visually-hidden');
 };
 
 const handleSubmit = async (e) => {
@@ -130,9 +142,10 @@ const handleSubmit = async (e) => {
     if (!userQuery || userQuery.length < 3) {
         loader.classList.add('visually-hidden');
         return informUser('Please, enter something (at least 3 characters long)');
-    }
+    };
     sessionStorage.setItem(LS_QUERY, userQuery);
-    fetchAndRender(userQuery);
+    await fetchAndRender(userQuery);
+    loader.classList.add('visually-hidden');
     e.target.reset();
     moreBtn.addEventListener('click', onClick);
 };
